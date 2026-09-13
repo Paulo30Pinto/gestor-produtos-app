@@ -1,5 +1,5 @@
 import type {Metadata} from 'next';
-import './globals.css'; // Global styles
+import './globals.css'; 
 
 export const metadata: Metadata = {
   title: 'Gestão de Produtos',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className="min-h-screen bg-[#f8fafc] text-slate-800 antialiased" suppressHydrationWarning>
         {children}
       </body>

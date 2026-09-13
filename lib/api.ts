@@ -161,3 +161,35 @@ export async function deleteProduct(
 
   return { success: true };
 }
+
+export async function createBatchProducts(
+  products: CreateProductoInput[],
+  userId: string = USER_ID
+): Promise<ProductsApiResponse> {
+  const url = `${API_BASE_URL}/api/users/products?userId=${encodeURIComponent(userId)}`;
+
+  const body = {
+    products: products.map((item) => ({
+      name: item.name,
+      description: item.description || '',
+      price: Number(item.price),
+      stock: Number(item.stock),
+    })),
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Erro ao criar produtos em lote (${response.status}): ${errorText}`);
+  }
+
+  return response.json();
+}

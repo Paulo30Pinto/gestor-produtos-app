@@ -2,11 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import {
+  createBatchProducts,
   createProduct,
   deleteProduct,
   updateProduct,
 } from '@/lib/api';
-import { CreateProductoInput, UpdateProductoInput } from '@/types/produtos';
+import { CreateProductoInput, UpdateProductoInput, IProducto } from '@/types/produtos';
 
 export interface ActionResult<T = unknown> {
   success: boolean;
@@ -14,6 +15,7 @@ export interface ActionResult<T = unknown> {
   error?: string;
 }
 
+//criar um produto
 export async function createProdutoAction(
   data: CreateProductoInput
 ): Promise<ActionResult> {
@@ -27,7 +29,7 @@ export async function createProdutoAction(
     if (isNaN(Number(data.stock)) || Number(data.stock) < 0) {
       return { success: false, error: 'Estoque inválido.' };
     }
-
+    
     const created = await createProduct({
       name: data.name.trim(),
       description: data.description?.trim(),
@@ -43,6 +45,8 @@ export async function createProdutoAction(
   }
 }
 
+
+//editar produto
 export async function updateProdutoAction(
   id: string,
   data: UpdateProductoInput
@@ -76,6 +80,8 @@ export async function updateProdutoAction(
   }
 }
 
+
+//deletar produto
 export async function deleteProdutoAction(id: string): Promise<ActionResult> {
   try {
     if (!id) {
@@ -87,6 +93,38 @@ export async function deleteProdutoAction(id: string): Promise<ActionResult> {
     return { success: true };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Erro ao excluir produto';
+    return { success: false, error: message };
+  }
+}
+
+
+//criar vários produtos
+export async function createBatchProductsAction(
+  products: CreateProductoInput[]
+): Promise<ActionResult<IProducto[]>> {
+  try {
+    if (!Array.isArray(products) || products.length === 0) {
+      return { success: false, error: 'A lista de produtos não pode estar vazia.' };
+    }
+
+    for (let i = 0; i < products.length; i++) {
+      const p = products[i];
+      if (!p.name || p.name.trim() === '') {
+        return { success: false, error: `O produto #${i + 1} deve ter um nome preenchido.` };
+      }
+      if (isNaN(Number(p.price)) || Number(p.price) < 0) {
+        return { success: false, error: `Preço inválido no produto #${i + 1}.` };
+      }
+      if (isNaN(Number(p.stock)) || Number(p.stock) < 0) {
+        return { success: false, error: `Estoque inválido no produto #${i + 1}.` };
+      }
+    }
+
+    const res = await createBatchProducts(products);
+    revalidatePath('/');
+    return { success: true, data: res.data };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Erro ao criar produtos em lote';
     return { success: false, error: message };
   }
 }

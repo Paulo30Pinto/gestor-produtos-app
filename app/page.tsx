@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { getProdutos } from '@/lib/api';
-import { ProdutoManager } from '@/componets/produtos/produto-manager';
+import { ProdutoManager } from '@/components/produtos/produto-manager';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { IProducto, PaginationMeta } from '@/types/produtos';
 
