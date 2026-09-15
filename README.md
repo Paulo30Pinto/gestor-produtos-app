@@ -1,6 +1,6 @@
-# Gestor de Produtos — Teste Técnico (Equipa Zeno)
+# Gestor de Produtos — Teste Técnico
 
-Aplicação de gestão de produtos desenvolvida como teste técnico para a Equipa Zeno. Permite visualizar, criar, editar e remover produtos de uma loja, consumindo uma API externa.
+Aplicação de gestão de produtos desenvolvida como teste técnico. Permite visualizar, criar, editar e remover produtos de uma loja, consumindo uma API externa.
 
 ## Stack utilizada
 
